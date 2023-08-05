@@ -3,6 +3,7 @@
 - [Reliable, Scalabale and Maintainable Applications](#reliable-scalabale-and-maintainable-applications)
   - [Thinking About Data Systems](#thinking-about-data-systems)
     - [Reliabilty](#reliabilty)
+    - [Scalability](#scalability)
 
 
 ## Thinking About Data Systems
@@ -37,3 +38,32 @@ Reliability, in plain english, means that a system should continue to function e
 
 It's very important to note that *faults* are not the same as *failures*. A fault is when a component or two within a system deviate from their spec, while
 a failure is when the system as a whole fails to provide the required functionality to the user. In these notes, I've covered several techniques for building reliable distributed systems from unreliable parts.
+
+Many critical bugs are actually due to poor error handling; by deliberately inducing faults in the system, we can test the system exhausitvely so it can handle most errors. This can increase a system designer's confidence that faults will be handled and dealt off nicely when any errors occur.
+
+**Hardware Faults**
+
+Hard disk crashes, RAM becomes faulty, or damage of under-sea cables all constitute *Hardware Faults*. The quickest way of handling hardware faults is replication: add redundancy to the individual hardware components in order to reduce the faulure rate of the system. 
+The downtime in case of a failure is not catastrophic in most applications if in a working system, the failed node is replaced fairly quickly by another working node. If we want to upgrade the software of a single-server system, we can do so by bringing the system to a halt for a very short period of time, whereas for a multi-node system, nodes must be matched one node at a time without the downtime of the entire system (also known as *rolling upgrade*).
+
+We typically think of hardware faults as independent failure events since the failure of one disk would not cause the entire system to go down. It is highly unlikely that multiple nodes (for example 4 out of 5 nodes in a 5-node system) fail at the same time.
+
+**Software Errors**
+
+These are systematic errors within systems which are harder to anticipate. Some example include a software bug that causes every instance of an application
+server to crash, a runaway process that uses up the shared resources (RAM, CPU, etc), or a service that a system depends on that slows down or becomes unresponsive. If a system is expected to provide some form of guarantee, it can constantly check itself while it is running and raise an alert if a discrepency is found.
+
+**Human Errors**
+
+Humans are known to be unreliable. Considering this fact, how can we make our systems reliable inspite of unreliable humans? Some factors that we could consider are as follows:
+
+- Create easy-to-use and properly configured APIs for interaction with distributed systems so people don't have to work around the poor abstractions while ending up negating their benefits.
+- Provide *sandbox* environments for people to explore the systems freely without harming the real-world users.
+- Test thoroughly at whole levels - from unit tests to the whole-system integration tests.
+- Detailed and clear moniorting of performance metrics and error rates.
+
+### Scalability
+*Scalibility* is a term that we use to describe the system's ability to cope with increased load - be it more users or larger volumes of data.
+
+**Describing Load**
+
